@@ -21,33 +21,33 @@ jobs:
                   node-version: '20'
 
             - name: Install dependencies
-              run: 
+              run: |
                 cd client
                 npm install
               
             - name: run test
-              run: 
+              run: |
                 cd client
                 npm run lint
 
             - name: Build
-              run: 
+              run: |
                 cd client
                 npm run build
 
             - name: connect to aws
               env: 
-                  EC2_HOST: ${{ secrets.EC2_HOST }}
-                  EC2_USERNAME: ${{ secrets.EC2_USER }}
-                  EC2_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+                EC2_HOST: ${{ secrets.EC2_HOST }}
+                EC2_USERNAME: ${{ secrets.EC2_USER }}
+                EC2_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
               run: |
-                  echo "$EC2_PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
-                  ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST
-                  echo "Connected to EC2"
-                  ls -la
+                echo "$EC2_PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
+                ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST
+                echo "Connected to EC2"
+                ls -la
             
             - name: clone repo
-              run: 
+              run: |
                 if [ -d "$HOME/NepalGames/.git"]; then
                   cd $HOME/NepalGames/
                   git pull origin main
@@ -56,7 +56,7 @@ jobs:
                 fi
 
             - name: docker image creation
-              run: 
+              run: |
                 cd $HOME/NepalGames/client
                 docker build . -t NepalGames:latest
                 docker run -dp 3000:5173 

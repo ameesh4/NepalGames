@@ -54,4 +54,12 @@ jobs:
 
                 cd ~/NepalGames/client
                 docker build . -t nepalgames:latest
-                docker run -dp 3000:5173 nepalgames:latest
+
+                echo 'Docker images:'
+                docker images
+
+                echo 'Running Docker container...'
+                docker run -dp 3000:5173 nepalgames:latest || echo 'Failed to start container'
+
+                echo 'Docker containers:'
+                docker ps -a

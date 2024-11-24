@@ -45,21 +45,16 @@ jobs:
                 chmod 600 github-ec2.pem
                 ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "echo 'Connected to EC2'; ls -la"
 
+                echo 'Checking NepalGames directory...'
                 if [ -d ~/NepalGames/.git ]; then
+                    echo 'Directory exists. Pulling latest changes...'
                     cd ~/NepalGames
-                    git pull origin main
+                    git pull origin main || echo 'Git pull failed!'
                 else
-                    git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames
+                    echo 'Directory does not exist. Cloning repository...'
+                    git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
                 fi
-
-                cd ~/NepalGames/client
-                docker build . -t nepalgames:latest
-
-                echo 'Docker images:'
-                docker images
-
-                echo 'Running Docker container...'
-                docker run -dp 5173:5173 nepalgames:latest || echo 'Failed to start container'
-
-                echo 'Docker containers:'
-                docker ps -a
+                echo 'Navigating to client directory and building Docker image...'
+                cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
+                docker build . -t nepalgames:latest || echo 'Docker build failed!'
+                docker run -dp 3000:5173 nepalgames:latest || echo 'Docker run failed!'

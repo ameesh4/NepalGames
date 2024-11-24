@@ -20,6 +20,9 @@ jobs:
               with:
                   node-version: '20'
 
+            - name: enter the directory
+              run: cd client
+
             - name: Install dependencies
               run: npm install
               
@@ -32,8 +35,8 @@ jobs:
 
             - name: connect to aws
               env: 
-                  AWS_HOST: ${{ secrets.EC2_HOST }}
-                  AWS_USERNAME: ${{ secrets.EC2_USER }}
+                  EC2_HOST: ${{ secrets.EC2_HOST }}
+                  EC2_USERNAME: ${{ secrets.EC2_USER }}
                   EC2_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
               run: |
                   echo "$EC2_PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
@@ -43,27 +46,15 @@ jobs:
             
             - name: clone repo
               run: 
-                if [ -d "$HOME/gamesNepal_frontend/.git"]; then
-                  cd $HOME/gamesNepal_frontend
+                if [ -d "$HOME/NepalGames/.git"]; then
+                  cd $HOME/NepalGames/
                   git pull origin main
                 else
-                  git clone "https://github.com/ameesh4/gamesNepal_frontend.git" 
+                  git clone "https://github.com/ameesh4/NepalGames.git" 
                 fi
 
             - name: docker image creation
               run: 
-                cd $HOME/gamesNepal_frontend
-                docker build . -t gamesNepal_frontend
-                docker run -dp 3000:5173 gamesNepal_frontend
-
-              
-              
-
-
-            
-
-        
-
-
-
-
+                cd $HOME/NepalGames/client
+                docker build . -t NepalGames:latest
+                docker run -dp 3000:5173 

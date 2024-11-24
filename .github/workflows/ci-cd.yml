@@ -20,17 +20,19 @@ jobs:
               with:
                   node-version: '20'
 
-            - name: enter the directory
-              run: cd client
-
             - name: Install dependencies
-              run: npm install
+              run: 
+                cd client
+                npm install
               
             - name: run test
-              run: npm run lint
+              run: 
+                cd client
+                npm run lint
 
             - name: Build
               run: 
+                cd client
                 npm run build
 
             - name: connect to aws

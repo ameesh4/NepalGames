@@ -43,18 +43,19 @@ jobs:
               run: |
                 echo "$EC2_PRIVATE_KEY" > github-ec2.pem
                 chmod 600 github-ec2.pem
-                ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "echo 'Connected to EC2'; ls -la"
+                ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "
 
-                echo 'Checking NepalGames directory...'
-                if [ -d ~/NepalGames/.git ]; then
-                    echo 'Directory exists. Pulling latest changes...'
-                    cd ~/NepalGames
-                    git pull origin main || echo 'Git pull failed!'
-                else
-                    echo 'Directory does not exist. Cloning repository...'
-                    git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
-                fi
-                echo 'Navigating to client directory and building Docker image...'
-                cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
-                docker build . -t nepalgames:latest || echo 'Docker build failed!'
-                docker run -dp 3000:5173 nepalgames:latest || echo 'Docker run failed!'
+                    echo 'Checking NepalGames directory...'
+                    if [ -d ~/NepalGames/.git ]; then
+                        echo 'Directory exists. Pulling latest changes...'
+                        cd ~/NepalGames
+                        git pull origin main || echo 'Git pull failed!'
+                    else
+                        echo 'Directory does not exist. Cloning repository...'
+                        git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
+                    fi
+                    echo 'Navigating to client directory and building Docker image...'
+                    cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
+                    docker build . -t nepalgames:latest || echo 'Docker build failed!'
+                    docker run -dp 3000:5173 nepalgames:latest || echo 'Docker run failed!'
+                "

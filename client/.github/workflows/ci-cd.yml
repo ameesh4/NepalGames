@@ -1,0 +1,69 @@
+name: gamesNepal_client
+on: 
+    push:
+        branches:
+            [ main ]
+    pull_request:
+        branches:
+            [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: Install dependencies
+              run: npm install
+              
+            - name: run test
+              run: npm run lint
+
+            - name: Build
+              run: 
+                npm run build
+
+            - name: connect to aws
+              env: 
+                  AWS_HOST: ${{ secrets.EC2_HOST }}
+                  AWS_USERNAME: ${{ secrets.EC2_USER }}
+                  EC2_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+              run: |
+                  echo "$EC2_PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
+                  ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST
+                  echo "Connected to EC2"
+                  ls -la
+            
+            - name: clone repo
+              run: 
+                if [ -d "$HOME/gamesNepal_frontend/.git"]; then
+                  cd $HOME/gamesNepal_frontend
+                  git pull origin main
+                else
+                  git clone "https://github.com/ameesh4/gamesNepal_frontend.git" 
+                fi
+
+            - name: docker image creation
+              run: 
+                cd $HOME/gamesNepal_frontend
+                docker build . -t gamesNepal_frontend
+                docker run -dp 3000:5173 gamesNepal_frontend
+
+              
+              
+
+
+            
+
+        
+
+
+
+

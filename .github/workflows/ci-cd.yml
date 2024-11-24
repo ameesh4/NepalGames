@@ -45,13 +45,13 @@ jobs:
                 chmod 600 github-ec2.pem
                 ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "echo 'Connected to EC2'; ls -la"
 
-                if [ -d "$HOME/NepalGames/.git"]; then
-                  cd $HOME/NepalGames/
+                if [ -d "~/NepalGames/.git"]; then
+                  cd ~/NepalGames/
                   git pull origin main
                 else
                   git clone "https://github.com/ameesh4/NepalGames.git" 
                 fi
 
-                cd $HOME/NepalGames/client
+                cd ~/NepalGames/client
                 docker build . -t NepalGames:latest
                 docker run -dp 3000:5173 

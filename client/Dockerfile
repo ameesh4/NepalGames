@@ -1,4 +1,4 @@
-FROM node:20.18.1-alpine
+FROM node:20.18.1-alpine AS build
 WORKDIR /src/app
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 RUN npm install && npm run build

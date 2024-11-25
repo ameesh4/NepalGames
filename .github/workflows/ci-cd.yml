@@ -56,9 +56,11 @@ jobs:
                     fi
                     echo 'Navigating to client directory and building Docker image...'
                     cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
+                    sudo docker ps -q --filter nepalgames:latest | xargs -r docker stop || echo 'Docker stop failed!'
+                    sudo docker ps -a -q --filter nepalgames:latest | xargs -r docker rm || echo 'Docker rm failed!'
+                    sudo docker rmi -f nepalgames:latest || echo 'Docker rmi failed!'
                     sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
                     sudo docker run -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
-                    sudo docker image prune -f || echo 'Docker image prune failed!'
                 "
 
             - name: Cleanup

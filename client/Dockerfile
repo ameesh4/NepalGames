@@ -1,6 +1,6 @@
 FROM node:20.18.1-alpine AS build
 WORKDIR /src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "tsconfig.json", "./"]
 RUN npm install
 
 RUN npm run build

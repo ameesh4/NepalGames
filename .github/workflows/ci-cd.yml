@@ -56,6 +56,8 @@ jobs:
                     fi
                     echo 'Navigating to client directory and building Docker image...'
                     cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
+                    sudo docker kill nepalgames || echo 'Docker kill failed!'
+                    sudo docker rm nepalgames || echo 'Docker rm failed!'
                     sudo docker rmi -f nepalgames:latest || echo 'Docker rmi failed!'
                     sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
                     sudo docker run --name nepalgames -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'

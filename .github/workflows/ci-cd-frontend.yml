@@ -57,5 +57,9 @@ jobs:
                     echo 'Navigating to client directory and building Docker image...'
                     cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
                     sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
-                    sudo docker run -dp 3000:5173 nepalgames:latest || echo 'Docker run failed!'
+                    sudo docker run -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
                 "
+            
+                - name: Cleanup
+                  run: |
+                    rm github-ec2.pem

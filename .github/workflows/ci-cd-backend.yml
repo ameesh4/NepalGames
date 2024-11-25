@@ -1,0 +1,41 @@
+name: gamesNepal-server
+on:
+    push:
+        branches:
+            [ main ]
+    pull_request:
+        branches:
+            [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              
+            - name: Setup Go 1.23.x
+              uses: actions/setup-go@v5
+              with:
+                go-version: '1.23.x'
+
+            - name: Install dependencies
+              run: |
+                go mod download
+                go mod verify
+            
+            - name: build
+              run: |
+                go build -v ./...
+
+            - name: test
+              run: |
+                go test
+
+            
+            
+
+            
+    
+    

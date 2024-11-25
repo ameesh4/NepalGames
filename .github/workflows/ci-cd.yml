@@ -58,7 +58,7 @@ jobs:
                     cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
                     sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
                     sudo docker run -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
-                    sudo docker image prune -f || echo 'Docker image prune failed!
+                    sudo docker image prune -f || echo 'Docker image prune failed!'
                 "
 
             - name: Cleanup

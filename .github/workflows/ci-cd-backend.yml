@@ -50,7 +50,7 @@ jobs:
                     sudo docker rm nepalgames_server || echo 'Docker rm failed!'
                     sudo docker rmi nepalgames_server:latest || echo 'Docker rmi failed!'
                     sudo docker build -t nepalgames_server:latest .
-                    sudo docker run --name nepalgames_server -dp 8000:8080 nepalgames_server:latest
+                    sudo docker run --name nepalgames_server -dp 8000:80 nepalgames_server:latest
                 "
 
             - name: Cleanup

@@ -1,0 +1,58 @@
+name: Nepal Games Server
+on:
+    push:
+        branches:
+            [ main ]
+    pull_request:
+        branches:
+            [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: '1.23.x'
+
+            - name: Install dependencies
+              run: |
+                cd server
+                go mod tidy
+                go mod download
+
+            - name: run test
+              run: |
+                cd server
+                go test ./...
+
+            - name : build
+              run: |
+                cd server
+                go build -o nepalgames
+
+            - name: connect to aws
+              env: 
+                EC2_HOST: ${{ secrets.EC2_HOST }}
+                EC2_USERNAME: ${{ secrets.EC2_USER }}
+                EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+              run: |
+                echo "$EC2_PRIVATE_KEY" > github-ec2.pem
+                chmod 600 github-ec2.pem
+                ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "
+                    cd ~/NepalGames/server || echo 'Failed to navigate to server directory!'
+                    sudo docker kill nepalgames_server || echo 'Docker kill failed!'
+                    sudo docker rm nepalgames_server || echo 'Docker rm failed!'
+                    sudo docker rmi nepalgames_server:latest || echo 'Docker rmi failed!'
+                    sudo docker build -t nepalgames_server:latest .
+                    sudo docker run --name nepalgames_server -dp 8080:8000 nepalgames_server:latest || echo 'Docker run failed!
+                "
+
+            - name: Cleanup
+              run: |
+                rm github-ec2.pem

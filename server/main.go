@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gamesNepal/server/src/components"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,5 +16,6 @@ func hello(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.GET("/", hello)
+	router.POST("/api/signup", components.Signup)
 	router.Run("localhost:8000")
 }

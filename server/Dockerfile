@@ -1,8 +1,9 @@
 FROM golang:1.23-alpine AS build
 WORKDIR /app
 RUN apk add --no-cache git
-RUN go mod download
+RUN go mod tidy
 COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 RUN go build -o app .
 

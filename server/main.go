@@ -15,7 +15,7 @@ func hello(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
-	router.GET("/", hello)
+	router.GET("/api/", hello)
 	router.POST("/api/signup", components.Signup)
-	router.Run("127.0.0.1:8000")
+	router.Run(":8000")
 }

@@ -10,6 +10,6 @@ RUN go build -o app .
 FROM alpine:3.20
 WORKDIR /app
 COPY --from=build /app/app .
-EXPOSE 80
+EXPOSE 8000
 ENTRYPOINT ["./app"]
 

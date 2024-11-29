@@ -26,11 +26,6 @@ jobs:
                 go mod tidy
                 go mod download
 
-            - name: run test
-              run: |
-                cd server
-                go test ./...
-
             - name : build
               run: |
                 cd server

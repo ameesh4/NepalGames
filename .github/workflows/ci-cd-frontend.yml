@@ -8,7 +8,7 @@ on:
             [ main ]
 
 jobs:
-    build:
+    lint-and-test:
         runs-on: ubuntu-latest
 
         steps:
@@ -25,44 +25,52 @@ jobs:
                 cd client
                 npm install
               
-            - name: run test
+            - name: run linter
               run: |
                 cd client
                 npm run lint
 
-            - name: Build
+            - name: run tests
               run: |
                 cd client
-                npm run build
+                npm run test
 
-            - name: connect to aws
-              env: 
-                EC2_HOST: ${{ secrets.EC2_HOST }}
-                EC2_USERNAME: ${{ secrets.EC2_USER }}
-                EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
-              run: |
-                echo "$EC2_PRIVATE_KEY" > github-ec2.pem
-                chmod 600 github-ec2.pem
-                ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "
 
-                    echo 'Checking NepalGames directory...'
-                    if [ -d ~/NepalGames/.git ]; then
-                        echo 'Directory exists. Pulling latest changes...'
-                        cd ~/NepalGames
-                        git pull origin main || echo 'Git pull failed!'
-                    else
-                        echo 'Directory does not exist. Cloning repository...'
-                        git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
-                    fi
-                    echo 'Navigating to client directory and building Docker image...'
-                    cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
-                    sudo docker kill nepalgames || echo 'Docker kill failed!'
-                    sudo docker rm nepalgames || echo 'Docker rm failed!'
-                    sudo docker rmi -f nepalgames:latest || echo 'Docker rmi failed!'
-                    sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
-                    sudo docker run --name nepalgames -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
-                "
+    deploy:
+        name: Deploy to AWS
+        runs-on: ubuntu-latest
+        needs: lint-and-test
+        if: github.ref == 'refs/heads/main'
+        steps:
 
-            - name: Cleanup
-              run: |
-                rm github-ec2.pem
+          - name: connect to aws
+            env: 
+              EC2_HOST: ${{ secrets.EC2_HOST }}
+              EC2_USERNAME: ${{ secrets.EC2_USER }}
+              EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+            run: |
+              echo "$EC2_PRIVATE_KEY" > github-ec2.pem
+              chmod 600 github-ec2.pem
+              ssh -o StrictHostKeyChecking=no -i github-ec2.pem $EC2_USERNAME@$EC2_HOST "
+
+                  echo 'Checking NepalGames directory...'
+                  if [ -d ~/NepalGames/.git ]; then
+                      echo 'Directory exists. Pulling latest changes...'
+                      cd ~/NepalGames
+                      git pull origin main || echo 'Git pull failed!'
+                  else
+                      echo 'Directory does not exist. Cloning repository...'
+                      git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
+                  fi
+                  echo 'Navigating to client directory and building Docker image...'
+                  cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
+                  sudo docker kill nepalgames || echo 'Docker kill failed!'
+                  sudo docker rm nepalgames || echo 'Docker rm failed!'
+                  sudo docker rmi -f nepalgames:latest || echo 'Docker rmi failed!'
+                  sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
+                  sudo docker run --name nepalgames -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
+              "
+
+          - name: Cleanup
+            run: |
+              rm github-ec2.pem

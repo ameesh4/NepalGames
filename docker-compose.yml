@@ -16,5 +16,5 @@ services:
       - "8000:8000"
     container_name: nepalgames_server
     env_file:
-      - ./server/.env
+      - ./.env
     restart: always

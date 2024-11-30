@@ -36,22 +36,22 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
+            - name: Setup go
+              uses: actions/setup-go@v2
               with:
-                  node-version: '20'
+                  go-version: '1.23'
 
             - name: Install dependencies
               run: |
                 cd server
-                npm install
+                go mod download
 
             - name: run tests
               run: |
                 cd server
-                npm run test
+                go test ./...
 
-                
+
     deploy:
         name: Deploy to AWS
         runs-on: ubuntu-latest

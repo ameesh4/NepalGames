@@ -30,12 +30,34 @@ jobs:
                 cd client
                 npm run lint
 
+    server-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
 
+            - name: Install dependencies
+              run: |
+                cd server
+                npm install
+
+            - name: run tests
+              run: |
+                cd server
+                npm run test
+
+                
     deploy:
         name: Deploy to AWS
         runs-on: ubuntu-latest
-        needs: lint-and-test
+        needs: 
+            - lint-and-test
+            - server-test
         if: github.ref == 'refs/heads/main'
         steps:
 
@@ -59,12 +81,11 @@ jobs:
                       git clone https://github.com/ameesh4/NepalGames.git ~/NepalGames || echo 'Git clone failed!'
                   fi
                   echo 'Navigating to client directory and building Docker image...'
-                  cd ~/NepalGames/client || echo 'Failed to navigate to client directory!'
-                  sudo docker kill nepalgames || echo 'Docker kill failed!'
-                  sudo docker rm nepalgames || echo 'Docker rm failed!'
-                  sudo docker rmi -f nepalgames:latest || echo 'Docker rmi failed!'
-                  sudo docker build . -t nepalgames:latest || echo 'Docker build failed!'
-                  sudo docker run --name nepalgames -dp 3000:80 nepalgames:latest || echo 'Docker run failed!'
+                  sudo docker-compose build
+                  echo 'Stopping and removing existing container...'
+                  sudo docker-compose down
+                  echo 'Starting new container...'
+                  sudo docker-compose up -d
               "
 
           - name: Cleanup

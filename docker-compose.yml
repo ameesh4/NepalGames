@@ -1,0 +1,20 @@
+services:
+  frontend:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    ports: 
+      - "3000:80"
+    container_name: nepalgames
+    restart: always
+  
+  backend:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports: 
+      - "8000:8000"
+    container_name: nepalgames_server
+    env_file:
+      - ./server/.env
+    restart: always

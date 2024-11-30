@@ -15,6 +15,6 @@ services:
     ports: 
       - "8000:8000"
     container_name: nepalgames_server
-    env_file:
-      - ./server/.env
+    environment:
+      - DB_URL=postgres://ameesh:password@localhost:5432/nepal_games
     restart: always

@@ -15,6 +15,4 @@ services:
     ports: 
       - "8000:8000"
     container_name: nepalgames_server
-    environment:
-      - DB_URL="postgres://ameesh:password@localhost:5432/games_nepal?sslmode=disable"
     restart: always

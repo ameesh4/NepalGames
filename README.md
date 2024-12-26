@@ -1,6 +1,6 @@
 # NepalGames
 
-NepalGames is a project aimed at creating a collection of traditional and popular games from Nepal. The goal is to preserve and promote the rich gaming culture of Nepal by providing digital versions of these games.
+NepalGames is an e-commerce website dedicated to selling digital games in Nepal. Our mission is to provide gamers in Nepal with easy access to a wide variety of digital games, including popular international titles. We aim to promote the gaming culture in Nepal.
 
 ## Features
 

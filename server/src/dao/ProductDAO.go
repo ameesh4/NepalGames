@@ -18,9 +18,9 @@ func AddProduct(product *src.Product) (string, error) {
 	now := time.Now()
 	createdOn := now.Format("2006-01-02")
 
-	query := "INSERT INTO products (name, description, price, quantity, picture, category, created_on, updated_on, type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO products (name, description, price, quantity, picture, category, created_on, updated_on) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
 
-	_, err = pool.Exec(context.Background(), query, product.Name, product.Description, product.PriceList, product.Quantity, product.Picture, product.Category, createdOn, createdOn, product.Types)
+	_, err = pool.Exec(context.Background(), query, product.Name, product.Description, product.Price, product.Quantity, product.Picture, product.CategoryId, createdOn, createdOn)
 
 	if err != nil {
 		return "Failed to add product", err
@@ -45,18 +45,17 @@ func GetProducts() ([]src.ProductRes, error) {
 	for rows.Next() {
 		var productRes src.ProductRes
 		var product src.ProductDB
-		err = rows.Scan(&product.ProductId, &product.Name, &product.Description, &product.PriceList, &product.Quantity, &product.Picture, &product.Category, &product.CreatedOn, &product.UpdatedOn, &product.Types)
+		err = rows.Scan(&product.ProductId, &product.Name, &product.Description, &product.Price, &product.Quantity, &product.Picture, &product.CategoryId, &product.CreatedOn, &product.UpdatedOn)
 		if err != nil {
 			return nil, err
 		}
 		productRes.ProductId = product.ProductId
 		productRes.Name = product.Name
 		productRes.Description = product.Description
-		productRes.Price = product.PriceList
+		productRes.Price = product.Price
 		productRes.Quantity = product.Quantity
 		productRes.Picture = product.Picture
-		productRes.Category = product.Category
-		productRes.Types = product.Types
+		productRes.CategoryId = product.CategoryId
 
 		products = append(products, productRes)
 	}
@@ -88,8 +87,8 @@ func EditProduct(product *src.ProductDB) (string, error) {
 	now := time.Now()
 	updatedOn := now.Format("2006-01-02")
 
-	query := "UPDATE products SET name = $1, description = $2, price = $3, quantity = $4, picture = $5, category = $6, updated_on = $7, type = $8 WHERE product_id = $8"
-	_, err = pool.Exec(context.Background(), query, product.Name, product.Description, product.PriceList, product.Quantity, product.Picture, product.Category, updatedOn, product.Types, product.ProductId)
+	query := "UPDATE products SET name = $1, description = $2, price = $3, quantity = $4, picture = $5, category = $6, updated_on = $7 WHERE product_id = $8"
+	_, err = pool.Exec(context.Background(), query, product.Name, product.Description, product.Price, product.Quantity, product.Picture, product.CategoryId, updatedOn, product.ProductId)
 	if err != nil {
 		return "Failed to update product", err
 	}
@@ -113,7 +112,7 @@ func SearchProduct(query string) ([]src.ProductRes, error) {
 	for rows.Next() {
 		var productRes src.ProductRes
 		var product src.ProductDB
-		err = rows.Scan(&product.ProductId, &product.Name, &product.Description, &product.PriceList, &product.Quantity, &product.Picture, &product.Category, &product.CreatedOn, &product.UpdatedOn, &product.Types)
+		err = rows.Scan(&product.ProductId, &product.Name, &product.Description, &product.Price, &product.Quantity, &product.Picture, &product.CategoryId, &product.CreatedOn, &product.UpdatedOn)
 
 		if err != nil {
 			return nil, err
@@ -122,14 +121,12 @@ func SearchProduct(query string) ([]src.ProductRes, error) {
 		productRes.ProductId = product.ProductId
 		productRes.Name = product.Name
 		productRes.Description = product.Description
-		productRes.Price = product.PriceList
+		productRes.Price = product.Price
 		productRes.Quantity = product.Quantity
 		productRes.Picture = product.Picture
-		productRes.Category = product.Category
-		productRes.Types = product.Types
+		productRes.CategoryId = product.CategoryId
 
 		products = append(products, productRes)
 	}
-
 	return products, nil
 }

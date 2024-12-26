@@ -64,7 +64,7 @@ func FindUserById(userId int) (src.UserDB, error) {
 	return userDB, nil
 }
 
-func EditUser(user src.User) (string, error) {
+func EditUser(user src.UserUpdate) (string, error) {
 	pool, err := src.DbConnect()
 	if err != nil {
 		return FailedToConnect, err

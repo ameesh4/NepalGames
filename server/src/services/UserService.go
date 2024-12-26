@@ -116,7 +116,7 @@ func GetUser(c *gin.Context) {
 }
 
 func EditUser(c *gin.Context) {
-	var user src.User
+	var user src.UserUpdate
 	err := c.BindJSON(&user)
 	if err != nil {
 		println(err.Error())

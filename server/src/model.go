@@ -45,42 +45,34 @@ type UserDB struct {
 }
 
 type ProductDB struct {
-	ProductId   int         `json:"productId"`
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	PriceList   []priceList `json:"price"`
-	Quantity    int         `json:"quantity"`
-	Picture     string      `json:"picture"`
-	Category    string      `json:"category"`
-	CreatedOn   time.Time   `json:"createdOn"`
-	UpdatedOn   time.Time   `json:"updatedOn"`
-	Types       []string    `json:"types"`
+	ProductId   int       `json:"productId"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Price       float64   `json:"price"`
+	Quantity    int       `json:"quantity"`
+	Picture     string    `json:"picture"`
+	CategoryId  int       `json:"category"`
+	CreatedOn   time.Time `json:"createdOn"`
+	UpdatedOn   time.Time `json:"updatedOn"`
 }
 
 type Product struct {
 	Name        string         `json:"name"`
 	Description string         `json:"description"`
-	PriceList   []priceList    `json:"price"`
+	Price       float64        `json:"price"`
 	Quantity    int            `json:"quantity"`
 	Picture     multipart.File `json:"picture"`
-	Category    string         `json:"category"`
-	Types       []string       `json:"types"`
-}
-
-type priceList struct {
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	CategoryId  int            `json:"category"`
 }
 
 type ProductRes struct {
-	ProductId   int         `json:"productId"`
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	Price       []priceList `json:"price"`
-	Quantity    int         `json:"quantity"`
-	Picture     string      `json:"picture"`
-	Category    string      `json:"category"`
-	Types       []string    `json:"types"`
+	ProductId   int     `json:"productId"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Quantity    int     `json:"quantity"`
+	Picture     string  `json:"picture"`
+	CategoryId  int     `json:"category"`
 }
 
 type ProductId struct {
@@ -96,6 +88,11 @@ type CategoryDB struct {
 	Name       string `json:"name"`
 	CreatedOn  string `json:"createdOn"`
 	UpdatedOn  string `json:"updatedOn"`
+}
+
+type CategoryRes struct {
+	CategoryId int    `json:"categoryId"`
+	Name       string `json:"name"`
 }
 
 type Query struct {

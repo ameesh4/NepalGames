@@ -11,7 +11,7 @@ import (
 func AddProduct(c *gin.Context) {
 	var product src.Product
 	c.BindJSON(&product)
-	if product.Name == "" || product.Description == "" || len(product.PriceList) == 0 || product.Quantity == 0 || product.Picture == nil || product.Category == "" {
+	if product.Name == "" || product.Description == "" || product.Price == 0 || product.Quantity == 0 || product.Picture == nil || product.CategoryId == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid product details",
 		})
@@ -35,7 +35,7 @@ func AddProduct(c *gin.Context) {
 func EditProduct(c *gin.Context) {
 	var product src.ProductDB
 	c.BindJSON(&product)
-	if product.ProductId == 0 || product.Name == "" || product.Description == "" || len(product.PriceList) == 0 || product.Quantity == 0 || product.Picture == "" || product.Category == "" {
+	if product.ProductId == 0 || product.Name == "" || product.Description == "" || product.Price == 0 || product.Quantity == 0 || product.Picture == "" || product.CategoryId == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Invalid product details",
 		})

@@ -84,10 +84,10 @@ type Category struct {
 }
 
 type CategoryDB struct {
-	CategoryId int    `json:"categoryId"`
-	Name       string `json:"name"`
-	CreatedOn  string `json:"createdOn"`
-	UpdatedOn  string `json:"updatedOn"`
+	CategoryId int       `json:"categoryId"`
+	Name       string    `json:"name"`
+	CreatedOn  time.Time `json:"createdOn"`
+	UpdatedOn  time.Time `json:"updatedOn"`
 }
 
 type CategoryRes struct {

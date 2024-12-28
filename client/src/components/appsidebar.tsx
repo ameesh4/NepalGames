@@ -18,6 +18,11 @@ const items = [
         icon: PackageSearch,
         url: '/98456523/admin/products'
     },
+    {
+        title: 'Categories',
+        icon: LayoutDashboard,
+        url: '/98456523/admin/categories'
+    }
 ]
 
 export default function AppSidebar() {

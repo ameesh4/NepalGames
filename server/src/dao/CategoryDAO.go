@@ -15,7 +15,7 @@ func AddCategory(category *src.Category) (string, error) {
 	now := time.Now()
 	createdOn := now.Format("2006-01-02")
 
-	query := "INSERT INTO categories (name, created_on, updated_on) VALUES ($1, $2, $3)"
+	query := "INSERT INTO category (name, created_on, updated_on) VALUES ($1, $2, $3)"
 
 	_, err = pool.Exec(context.Background(), query, category.Name, createdOn, createdOn)
 
@@ -32,7 +32,7 @@ func GetCategories() ([]src.CategoryRes, error) {
 		return nil, err
 	}
 
-	query := "SELECT * FROM categories"
+	query := "SELECT * FROM category"
 	rows, err := pool.Query(context.Background(), query)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func DeleteCategory(name string) (string, error) {
 		return "Failed to connect to db", err
 	}
 
-	query := "DELETE FROM categories WHERE name = $1"
+	query := "DELETE FROM category WHERE name = $1"
 	_, err = pool.Exec(context.Background(), query, name)
 	if err != nil {
 		return "Failed to delete category", err
